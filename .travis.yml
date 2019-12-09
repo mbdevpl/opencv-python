@@ -709,3 +709,20 @@ before_cache: |
 
     fi
     set +x; set +e
+
+before_deploy:
+  - pyenv global 3.7
+  - pip3 install -U --user version_query || pip3 install -U version_query
+  - wget https://gist.githubusercontent.com/mbdevpl/46d458350f0c9cc7d793b67573e01f7b/raw/prepare_bintray_deployment.py
+  - python3 prepare_bintray_deployment.py "${TRAVIS_OS_NAME}-${PLAT:-x86_64}-python${MB_PYTHON_VERSION}" "wheelhouse/*.whl"
+
+deploy:
+  - provider: bintray
+    file: ".bintray.json"
+    user: "mbdevpl"
+    key:
+      secure: "NyZU2xOxxVH8KrqI9VRf+791kpAgxidre+6f5nkG46wHnK54dU6q7n8GbyTbPLNRfVdkTPNvAEA1nEZMucA/B09+6dm9uygFVQsv5eO/ZpyNr3yLQ+rih/bvT6wcVs1hhWFL4tC9oHH+XQYkWhQwtNKWGHyo48at9L7hvK/Xq8y03Kz1ijnxVaaWjwnLTxOWnR+EITss2mL86Gl2YfnhHJPT1M/EPm0yl3yAlbILPy8XYaMSVKLOycNdyMnOpvsywImKE2Hz8t9RmYaxgmskb6fFM0iLXZPUgt8dxOPVBkbV57TBBIJUhSPEzmnbegf2qgm3JPydfYSlybLHbqrKo0iHqkFsl4BvgB51Iqe5P30WY3meJwPawQBMHbnxWV9lLZCc3nYGg7A3Tzj8ibI3iVbsOyYn2ZeKzFFlM7KBe3aPDthst4JjAMBrOID8osOoUvC/ke+DwpQpF51dGlIMrfseA4N2WUgi4bkebSaf/rj4/lh2Id/UJ8H/d1zACHy+Kk7Cb/ppN1rdO7MgHqrFWfNX6+wqW4FpISch5Aznm9yWuBSTS7w/4+uurucsTkJj9/dimX9BQzT8px+tVmdkLSb2clG2eahdTPFQmukRa/B+vtgsXPT376EeKk6PJPfvgTSHMUXc6b/NX6t60HQkKp2s9zo6qdL7li0F1VA2cAs="
+    on:
+      all_branches: true
+      condition: -z "${MB_PYTHON_VERSION-}"
+    skip_cleanup: true
