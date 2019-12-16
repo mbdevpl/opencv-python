@@ -114,6 +114,11 @@ def main():
         # and skbuild bails out on seeing that
         "-DINSTALL_CREATE_DISTRIB=ON",
 
+        # Disable OpenCL.
+        "-DWITH_OPENCL=OFF",
+        "-DWITH_OPENCLAMDFFT=OFF",
+        "-DWITH_OPENCLAMDBLAS=OFF",
+
         # See opencv/CMakeLists.txt for options and defaults
         "-DBUILD_opencv_apps=OFF",
         "-DBUILD_SHARED_LIBS=OFF",
